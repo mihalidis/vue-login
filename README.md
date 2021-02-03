@@ -4,17 +4,17 @@
 
 ## Build Setup
 
-# Then you need to create a file named .babelrc right in the project folder and write the following codes in it so that we will not encounter problems in mapping operations related to Store.
+``` bash
+# install dependencies
+npm install
+
+#Then you need to create a file named .babelrc right in the project folder and write the following codes in it so that we will not encounter problems in mapping operations related to Store.
 {
   "presets": [
     ["env", { "modules": false }],
     "stage-3"
   ]
 }
-
-``` bash
-# install dependencies
-npm install
 
 # serve with hot reload at localhost:8080
 npm run dev
