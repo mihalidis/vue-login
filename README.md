@@ -8,7 +8,9 @@
 # install dependencies
 npm install
 
-#Then you need to create a file named .babelrc right in the project folder and write the following codes in it so that we will not encounter problems in mapping operations related to Store.
+#Then you need to create a file named .babelrc right in the project folder 
+#and write the following codes in it so that we will not encounter problems 
+#in mapping operations related to Store.
 {
   "presets": [
     ["env", { "modules": false }],
