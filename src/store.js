@@ -23,15 +23,27 @@ const store = new Vuex.Store({
         initAuth({commit, dispatch}){
             const token = localStorage.getItem("token")
             if(token){
-                commit("setToken", token)
-                router.push("/")
+                const expirationDate = localStorage.getItem("expirationDate");
+                const time = new Date().getTime()
+
+                if(time >= +expirationDate){
+                    dispatch("logout");
+                }else {
+                    commit("setToken", token)
+                    //geçen zaman
+                    const timerSecond = +expirationDate - time
+                    dispatch("setTimeoutTimer", timerSecond)
+                    router.push("/")
+                }
+
             }else{
                 router.push("/auth")
+                return false
             }
         },
         // Login işlemi auth.vue
         login({commit, dispatch, state}, authData){
-            console.log(authData);
+            
             let authLink = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=";
             if(authData.isUser){
                 authLink = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=";
@@ -39,15 +51,25 @@ const store = new Vuex.Store({
             axios.post( authLink + "AIzaSyAZ8coPq5MFnI_OxEiB9hlKib7_5i8bhsM",
                 {email: authData.email, password: authData.password, returnSecureToken: true}
                 ).then(response => {
-                        commit("setToken", response.data.idToken)
-                        // sayfa yenilendiğinde token'ı tutmak için
-                        localStorage.setItem("token", response.data.idToken)
+                    commit("setToken", response.data.idToken)
+                    // sayfa yenilendiğinde token'ı tutmak için
+                    localStorage.setItem("token", response.data.idToken)
+                    localStorage.setItem("expirationDate", new Date().getTime() + +response.data.expiresIn*1000)
+
+                    dispatch("setTimeoutTimer", +response.data.expiresIn*1000)
                     })
                 },
         //logout işlemi auth.vue
-        logout({commit, dispatch, state}){
+        logout({commit}){
             commit("clearToken");
             localStorage.removeItem("token")
+            localStorage.removeItem("expirationDate")
+            router.replace("/auth");
+        },
+        setTimeoutTimer({dispatch}, expiresIn){
+            setTimeout(() => {
+                dispatch("logout");
+            }, expiresIn)
         }
     },
     getters: {

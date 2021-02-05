@@ -26,7 +26,6 @@
     methods: {
       logout() {
         this.$store.dispatch("logout");
-        this.$router.replace("/auth");
       }
     },
     computed: {
