@@ -12,5 +12,9 @@
     components: {
         Header,
     },
+    // aplikasyon çalıştığında aşağıdakini çalıştırır, tutulan tokenı kullanabilmek içn
+    created(){
+      this.$store.dispatch("initAuth");
+    }
   }
 </script>
